@@ -1,0 +1,24 @@
+package com.grietm.challenge.infrastructure.messaging.search;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
+public record SearchMessage(
+	String searchId,
+	String hotelId,
+	LocalDate checkIn,
+	LocalDate checkOut,
+	List<Integer> ages
+) {
+
+	public SearchMessage {
+		searchId = Objects.requireNonNull(searchId, "searchId must not be null");
+		hotelId = Objects.requireNonNull(hotelId, "hotelId must not be null");
+		checkIn = Objects.requireNonNull(checkIn, "checkIn must not be null");
+		checkOut = Objects.requireNonNull(checkOut, "checkOut must not be null");
+		ages = Objects.requireNonNull(ages, "ages must not be null");
+		ages = List.copyOf(ages);
+	}
+
+}

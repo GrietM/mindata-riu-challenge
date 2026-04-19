@@ -5,7 +5,6 @@ import com.grietm.challenge.application.port.out.SearchIdGenerator;
 import com.grietm.challenge.application.port.out.SearchPublisher;
 import com.grietm.challenge.application.service.CreateSearchService;
 import com.grietm.challenge.infrastructure.id.UuidSearchIdGenerator;
-import com.grietm.challenge.infrastructure.messaging.search.PendingSearchPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,11 +19,6 @@ public class CreateSearchConfiguration {
 	@Bean
 	SearchIdGenerator searchIdGenerator() {
 		return new UuidSearchIdGenerator();
-	}
-
-	@Bean
-	SearchPublisher searchPublisher() {
-		return new PendingSearchPublisher();
 	}
 
 }
