@@ -1,6 +1,7 @@
 package com.grietm.challenge.infrastructure.web.error;
 
 import com.grietm.challenge.domain.exception.DomainValidationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -51,6 +52,17 @@ public class RestExceptionHandler {
 			"Request validation failed",
 			List.of(exception.getParameterName() + ": " + exception.getParameterName() + " is required")
 		);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ApiErrorResponse handleConstraintViolationException(ConstraintViolationException exception) {
+		List<String> errors = exception.getConstraintViolations()
+			.stream()
+			.map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+			.toList();
+
+		return new ApiErrorResponse("Request validation failed", errors);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)

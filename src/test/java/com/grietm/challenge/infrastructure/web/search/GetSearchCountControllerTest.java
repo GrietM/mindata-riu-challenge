@@ -2,7 +2,6 @@ package com.grietm.challenge.infrastructure.web.search;
 
 import com.grietm.challenge.application.port.in.GetSearchCountResult;
 import com.grietm.challenge.application.port.in.GetSearchCountUseCase;
-import com.grietm.challenge.domain.exception.DomainValidationException;
 import com.grietm.challenge.domain.model.SearchId;
 import com.grietm.challenge.domain.model.SearchCriteria;
 import com.grietm.challenge.infrastructure.web.error.RestExceptionHandler;
@@ -81,22 +80,21 @@ class GetSearchCountControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
 			.andExpect(jsonPath("$.message").value("Request validation failed"))
-			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId must not be blank"));
+			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId is required"));
 
 		verify(getSearchCountUseCase, never()).count(any(SearchId.class));
 	}
 
 	@Test
 	void shouldReturnBadRequestWhenDomainValidationFails() throws Exception {
-		when(getSearchCountUseCase.count(any(SearchId.class)))
-			.thenThrow(new DomainValidationException("searchId must not be blank"));
-
 		mockMvc.perform(get("/count")
 				.param("searchId", " "))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
 			.andExpect(jsonPath("$.message").value("Request validation failed"))
-			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId must not be blank"));
+			.andExpect(jsonPath("$.errors[0]").value("count.searchId: searchId must not be blank"));
+
+		verify(getSearchCountUseCase, never()).count(any(SearchId.class));
 	}
 
 }
