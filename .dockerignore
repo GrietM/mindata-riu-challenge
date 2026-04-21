@@ -1,0 +1,7 @@
+target/
+.git/
+.idea/
+docs/
+README.md
+target/site/
+target/surefire-reports/

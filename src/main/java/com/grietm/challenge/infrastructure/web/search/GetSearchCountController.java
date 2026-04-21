@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/count")
 public class GetSearchCountController {
+
+	private static final Logger log = LoggerFactory.getLogger(GetSearchCountController.class);
 
 	private final GetSearchCountUseCase getSearchCountUseCase;
 
@@ -55,10 +59,19 @@ public class GetSearchCountController {
 		)
 		@RequestParam @NotBlank(message = "searchId must not be blank") String searchId
 	) {
+		log.info("Received count request for searchId {}", searchId);
+
 		return getSearchCountUseCase.count(new SearchId(searchId))
+			.map(result -> {
+				log.info("Returning count {} for searchId {}", result.count(), searchId);
+				return result;
+			})
 			.map(this::toResponse)
 			.map(ResponseEntity::ok)
-			.orElseGet(() -> ResponseEntity.notFound().build());
+			.orElseGet(() -> {
+				log.info("No persisted search found for searchId {}", searchId);
+				return ResponseEntity.notFound().build();
+			});
 	}
 
 	private GetSearchCountResponse toResponse(GetSearchCountResult result) {
