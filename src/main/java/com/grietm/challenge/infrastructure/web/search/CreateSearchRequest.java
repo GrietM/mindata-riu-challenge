@@ -1,5 +1,6 @@
 package com.grietm.challenge.infrastructure.web.search;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -14,10 +15,12 @@ public record CreateSearchRequest(
 	@Schema(description = "Hotel identifier", example = "4521")
 	@NotBlank(message = "hotelId must not be blank")
 	String hotelId,
-	@Schema(description = "Check-in date", example = "2026-12-29")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@Schema(description = "Check-in date in dd/MM/yyyy format", example = "29/12/2026", pattern = "dd/MM/yyyy", type = "string")
 	@NotNull(message = "checkIn must not be null")
 	LocalDate checkIn,
-	@Schema(description = "Check-out date", example = "2026-12-31")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@Schema(description = "Check-out date in dd/MM/yyyy format", example = "31/12/2026", pattern = "dd/MM/yyyy", type = "string")
 	@NotNull(message = "checkOut must not be null")
 	LocalDate checkOut,
 	@ArraySchema(

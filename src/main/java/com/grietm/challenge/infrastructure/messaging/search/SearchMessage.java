@@ -1,5 +1,7 @@
 package com.grietm.challenge.infrastructure.messaging.search;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -7,7 +9,9 @@ import java.util.Objects;
 public record SearchMessage(
 	String searchId,
 	String hotelId,
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	LocalDate checkIn,
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	LocalDate checkOut,
 	List<Integer> ages
 ) {

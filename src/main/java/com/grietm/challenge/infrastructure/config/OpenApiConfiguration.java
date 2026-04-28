@@ -14,6 +14,7 @@ public class OpenApiConfiguration {
 			.title("MinData RIU Challenge API")
 			.description("""
 				API for registering hotel availability searches and counting identical persisted searches.
+				HTTP requests and responses expose checkIn and checkOut using dd/MM/yyyy.
 				POST /search accepts and publishes searches asynchronously through Kafka.
 				GET /count reads persisted searches from MySQL using a searchId.
 				""")

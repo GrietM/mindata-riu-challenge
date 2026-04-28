@@ -65,12 +65,18 @@ http://localhost:8080/v3/api-docs
 
 La documentación completa de requests, responses y códigos HTTP queda disponible en Swagger.
 
+Contrato de fechas:
+
+- `checkIn` y `checkOut` se reciben y se devuelven en formato `dd/MM/yyyy`
+- internamente la aplicación sigue trabajando con `LocalDate`
+
 ## Reglas de validación
 
 La API aplica validaciones tanto a nivel HTTP como de dominio. Entre las reglas principales:
 
 - `hotelId` no puede ser vacío
 - `checkIn` y `checkOut` son obligatorios
+- `checkIn` y `checkOut` deben enviarse en formato `dd/MM/yyyy`
 - `checkIn` debe ser anterior a `checkOut`
 - `ages` no puede ser vacío
 -  las edades deben ser mayores o iguales a `0`

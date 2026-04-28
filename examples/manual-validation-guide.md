@@ -37,8 +37,8 @@ Guardar el `searchId` como `SEARCH_ID_1`.
 ```json
 {
   "hotelId": "4521",
-  "checkIn": "2026-12-29",
-  "checkOut": "2026-12-31",
+  "checkIn": "29/12/2026",
+  "checkOut": "31/12/2026",
   "ages": [7, 2, 7, 1]
 }
 ```
@@ -50,8 +50,8 @@ Guardar el `searchId` como `SEARCH_ID_2`.
 ```json
 {
   "hotelId": "4521",
-  "checkIn": "2026-12-29",
-  "checkOut": "2026-12-31",
+  "checkIn": "29/12/2026",
+  "checkOut": "31/12/2026",
   "ages": [7, 2, 7, 1]
 }
 ```
@@ -63,8 +63,8 @@ Guardar el `searchId` como `SEARCH_ID_3`.
 ```json
 {
   "hotelId": "4521",
-  "checkIn": "2026-12-29",
-  "checkOut": "2026-12-31",
+  "checkIn": "29/12/2026",
+  "checkOut": "31/12/2026",
   "ages": [2, 7, 7, 1]
 }
 ```
@@ -76,8 +76,8 @@ Guardar el `searchId` como `SEARCH_ID_4`.
 ```json
 {
   "hotelId": "9999",
-  "checkIn": "2026-12-29",
-  "checkOut": "2026-12-31",
+  "checkIn": "29/12/2026",
+  "checkOut": "31/12/2026",
   "ages": [7, 2, 7, 1]
 }
 ```
@@ -89,8 +89,8 @@ Guardar el `searchId` como `SEARCH_ID_5`.
 ```json
 {
   "hotelId": "4521",
-  "checkIn": "2027-01-10",
-  "checkOut": "2027-01-15",
+  "checkIn": "10/01/2027",
+  "checkOut": "15/01/2027",
   "ages": [7, 2]
 }
 ```
@@ -102,8 +102,8 @@ Guardar el `searchId` como `SEARCH_ID_6`.
 ```json
 {
   "hotelId": "4521",
-  "checkIn": "2026-12-29",
-  "checkOut": "2026-12-31",
+  "checkIn": "29/12/2026",
+  "checkOut": "31/12/2026",
   "ages": [1]
 }
 ```

@@ -1,5 +1,6 @@
 package com.grietm.challenge.infrastructure.web.error;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.grietm.challenge.domain.exception.DomainValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,10 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -55,10 +60,18 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ApiErrorResponse handleHttpMessageNotReadable() {
+	public ApiErrorResponse handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
+		Optional<String> invalidDateField = findInvalidDateField(exception);
+		if (invalidDateField.isPresent()) {
+			return new ApiErrorResponse(
+				"Request validation failed",
+				List.of(invalidDateField.get() + ": invalid date format. Expected format: " + DATE_FORMAT)
+			);
+		}
+
 		return new ApiErrorResponse(
 			"Request body is malformed",
-			List.of("Ensure the JSON structure and field formats are valid")
+			List.of("Ensure the JSON structure is valid")
 		);
 	}
 
@@ -69,6 +82,22 @@ public class RestExceptionHandler {
 			"Request validation failed",
 			List.of(exception.getMessage())
 		);
+	}
+
+	private Optional<String> findInvalidDateField(Throwable throwable) {
+		Throwable current = throwable;
+		while (current != null) {
+			if (current instanceof InvalidFormatException invalidFormatException
+				&& invalidFormatException.getTargetType() != null
+				&& LocalDate.class.isAssignableFrom(invalidFormatException.getTargetType())) {
+				return invalidFormatException.getPath().stream()
+					.map(reference -> reference.getFieldName())
+					.filter(fieldName -> fieldName != null && !fieldName.isBlank())
+					.findFirst();
+			}
+			current = current.getCause();
+		}
+		return Optional.empty();
 	}
 
 }
