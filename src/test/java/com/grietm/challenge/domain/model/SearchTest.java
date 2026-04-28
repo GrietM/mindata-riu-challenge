@@ -4,6 +4,7 @@ import com.grietm.challenge.domain.exception.DomainValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -56,6 +57,16 @@ class SearchTest {
 	}
 
 	@Test
+	void shouldRejectNullSearchIdValue() {
+		DomainValidationException exception = assertThrows(
+			DomainValidationException.class,
+			() -> new SearchId(null)
+		);
+
+		assertEquals("searchId must not be blank", exception.getMessage());
+	}
+
+	@Test
 	void shouldRejectSearchWhenCriteriaIsNull() {
 		DomainValidationException exception = assertThrows(
 			DomainValidationException.class,
@@ -93,6 +104,46 @@ class SearchTest {
 		);
 
 		assertEquals("hotelId must not be blank", exception.getMessage());
+	}
+
+	@Test
+	void shouldRejectNullCheckIn() {
+		DomainValidationException exception = assertThrows(
+			DomainValidationException.class,
+			() -> new SearchCriteria("1234aBc", null, LocalDate.of(2026, 12, 31), List.of(30))
+		);
+
+		assertEquals("checkIn must not be null", exception.getMessage());
+	}
+
+	@Test
+	void shouldRejectNullCheckOut() {
+		DomainValidationException exception = assertThrows(
+			DomainValidationException.class,
+			() -> new SearchCriteria("1234aBc", LocalDate.of(2026, 12, 29), null, List.of(30))
+		);
+
+		assertEquals("checkOut must not be null", exception.getMessage());
+	}
+
+	@Test
+	void shouldRejectNullAges() {
+		DomainValidationException exception = assertThrows(
+			DomainValidationException.class,
+			() -> new SearchCriteria("1234aBc", LocalDate.of(2026, 12, 29), LocalDate.of(2026, 12, 31), null)
+		);
+
+		assertEquals("ages must not be null", exception.getMessage());
+	}
+
+	@Test
+	void shouldRejectNullAgeElement() {
+		DomainValidationException exception = assertThrows(
+			DomainValidationException.class,
+			() -> new SearchCriteria("1234aBc", LocalDate.of(2026, 12, 29), LocalDate.of(2026, 12, 31), Arrays.asList(30, null))
+		);
+
+		assertEquals("ages must contain only values greater than or equal to 0", exception.getMessage());
 	}
 
 	@Test
