@@ -151,7 +151,7 @@ Algunas decisiones relevantes de la implementación:
 - El `searchId` se genera de forma aleatoria y se asigna a cada búsqueda de manera independiente, incluso cuando varias búsquedas tienen exactamente el mismo contenido.
 - Se utilizaron modelos distintos para HTTP, dominio, mensajería y persistencia, evitando acoplar una capa a otra. 
 - La regla de igualdad entre búsquedas considera también el orden de `ages`, tal como pide el challenge.
-- La persistencia del `POST /search` es asíncrona: la API publica el evento en Kafka y el consumidor lo almacena luego en MySQL.
+- La persistencia del `POST /search` es asíncrona: la API publica el evento en Kafka y el consumidor lo almacena luego en MySQL. El producer registra explícitamente el resultado final de cada publicación para mejorar la observabilidad y evitar errores silenciosos.
 - El conteo se resuelve con una query parametrizada, evitando construir SQL mediante concatenación manual de valores y reduciendo el riesgo de SQL injection.
 
 ## Tecnologías utilizadas
@@ -231,5 +231,4 @@ Notas:
 
 - Elevar branch coverage hasta el umbral objetivo del challenge
 - Incorporar reintentos o una estrategia de recuperación para errores de consumo en Kafka
-- Mejorar la observabilidad con logs más orientados al seguimiento del flujo entre publicación, consumo y persistencia
 - Evaluar el uso de virtual threads si el volumen de concurrencia crece y se vuelve necesario optimizar el manejo de tareas bloqueantes
