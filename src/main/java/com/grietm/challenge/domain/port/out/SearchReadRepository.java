@@ -1,4 +1,4 @@
-package com.grietm.challenge.application.port.out;
+package com.grietm.challenge.domain.port.out;
 
 import com.grietm.challenge.domain.model.Search;
 import com.grietm.challenge.domain.model.SearchCriteria;
