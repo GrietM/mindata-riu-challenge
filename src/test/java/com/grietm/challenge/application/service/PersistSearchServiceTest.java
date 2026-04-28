@@ -1,9 +1,9 @@
 package com.grietm.challenge.application.service;
 
 import com.grietm.challenge.application.port.in.PersistSearchCommand;
-import com.grietm.challenge.application.port.out.SearchPersistenceRepository;
 import com.grietm.challenge.domain.exception.DomainValidationException;
 import com.grietm.challenge.domain.model.Search;
+import com.grietm.challenge.domain.port.out.SearchPersistenceRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

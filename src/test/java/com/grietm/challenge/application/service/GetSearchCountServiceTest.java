@@ -1,10 +1,10 @@
 package com.grietm.challenge.application.service;
 
 import com.grietm.challenge.application.port.in.GetSearchCountResult;
-import com.grietm.challenge.application.port.out.SearchReadRepository;
 import com.grietm.challenge.domain.model.Search;
 import com.grietm.challenge.domain.model.SearchCriteria;
 import com.grietm.challenge.domain.model.SearchId;
+import com.grietm.challenge.domain.port.out.SearchReadRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

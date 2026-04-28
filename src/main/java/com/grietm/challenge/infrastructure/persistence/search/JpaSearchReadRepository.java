@@ -1,9 +1,9 @@
 package com.grietm.challenge.infrastructure.persistence.search;
 
-import com.grietm.challenge.application.port.out.SearchReadRepository;
 import com.grietm.challenge.domain.model.Search;
 import com.grietm.challenge.domain.model.SearchCriteria;
 import com.grietm.challenge.domain.model.SearchId;
+import com.grietm.challenge.domain.port.out.SearchReadRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Component;
