@@ -57,8 +57,8 @@ class GetSearchCountControllerTest {
 			.andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
 			.andExpect(jsonPath("$.searchId").value("search-123"))
 			.andExpect(jsonPath("$.search.hotelId").value("hotel-456"))
-			.andExpect(jsonPath("$.search.checkIn").value("2026-12-29"))
-			.andExpect(jsonPath("$.search.checkOut").value("2026-12-31"))
+			.andExpect(jsonPath("$.search.checkIn").value("29/12/2026"))
+			.andExpect(jsonPath("$.search.checkOut").value("31/12/2026"))
 			.andExpect(jsonPath("$.search.ages[0]").value(30))
 			.andExpect(jsonPath("$.search.ages[3]").value(3))
 			.andExpect(jsonPath("$.count").value(2));
@@ -81,7 +81,7 @@ class GetSearchCountControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
 			.andExpect(jsonPath("$.message").value("Request validation failed"))
-			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId must not be blank"));
+			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId is required"));
 
 		verify(getSearchCountUseCase, never()).count(any(SearchId.class));
 	}
@@ -92,11 +92,11 @@ class GetSearchCountControllerTest {
 			.thenThrow(new DomainValidationException("searchId must not be blank"));
 
 		mockMvc.perform(get("/count")
-				.param("searchId", " "))
+				.param("searchId", "search-123"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
 			.andExpect(jsonPath("$.message").value("Request validation failed"))
-			.andExpect(jsonPath("$.errors[0]").value("searchId: searchId must not be blank"));
+			.andExpect(jsonPath("$.errors[0]").value("searchId must not be blank"));
 	}
 
 }
