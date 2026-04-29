@@ -97,33 +97,26 @@ class KafkaSearchPublisherTest {
 	}
 
 	@Test
-	void shouldLogAndRethrowSynchronousPublishFailure() {
+	void shouldWrapSynchronousPublishFailureWithContext() {
 		KafkaTemplate<String, SearchMessage> kafkaTemplate = mock(KafkaTemplate.class);
 		KafkaSearchPublisher publisher = new KafkaSearchPublisher(kafkaTemplate, SEARCH_TOPIC);
-		ListAppender<ILoggingEvent> logAppender = attachLogAppender();
+		Search search = sampleSearch();
 		when(kafkaTemplate.send(SEARCH_TOPIC, "search-123", expectedMessage()))
 			.thenThrow(new IllegalStateException("serializer failure"));
 
-		try {
-			IllegalStateException exception = assertThrows(
-				IllegalStateException.class,
-				() -> publisher.publish(sampleSearch())
-			);
+		IllegalStateException exception = assertThrows(
+			IllegalStateException.class,
+			() -> publisher.publish(search)
+		);
 
-			assertAll(
-				() -> assertEquals("serializer failure", exception.getMessage()),
-				() -> assertTrue(
-					logAppender.list.stream().anyMatch(event ->
-						event.getLevel() == Level.ERROR &&
-							event.getFormattedMessage().contains("Failed to start Kafka publish for search id search-123") &&
-							event.getThrowableProxy() != null &&
-							event.getThrowableProxy().getMessage().contains("serializer failure")
-					)
-				)
-			);
-		} finally {
-			detachLogAppender(logAppender);
-		}
+		assertAll(
+			() -> assertEquals(
+				"Failed to start Kafka publish for search id search-123 to topic hotel_availability_searches",
+				exception.getMessage()
+			),
+			() -> assertEquals(IllegalStateException.class, exception.getCause().getClass()),
+			() -> assertEquals("serializer failure", exception.getCause().getMessage())
+		);
 	}
 
 	@Test
@@ -149,10 +142,11 @@ class KafkaSearchPublisherTest {
 			LocalDate.of(2026, 12, 31),
 			originalAges
 		);
+		List<Integer> copiedAges = message.ages();
 
 		assertAll(
-			() -> assertEquals(List.of(7, 2, 7, 1), message.ages()),
-			() -> assertThrows(UnsupportedOperationException.class, () -> message.ages().add(9))
+			() -> assertEquals(List.of(7, 2, 7, 1), copiedAges),
+			() -> assertThrows(UnsupportedOperationException.class, () -> copiedAges.add(9))
 		);
 	}
 

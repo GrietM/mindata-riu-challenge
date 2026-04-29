@@ -16,6 +16,19 @@ import java.util.Optional;
 @Component
 public class JpaSearchReadRepository implements SearchReadRepository {
 
+	private static final String BASE_COUNT_QUERY = """
+		SELECT COUNT(*)
+		FROM search_records sr
+		WHERE sr.hotel_id = :hotelId
+		  AND sr.check_in = :checkIn
+		  AND sr.check_out = :checkOut
+		  AND (
+		    SELECT COUNT(*)
+		    FROM search_record_ages sra_count
+		    WHERE sra_count.search_id = sr.search_id
+		  ) = :agesSize
+		""";
+
 	private final SpringDataSearchRecordRepository repository;
 	private final EntityManager entityManager;
 
@@ -46,40 +59,21 @@ public class JpaSearchReadRepository implements SearchReadRepository {
 	}
 
 	private String buildCountQuery(int agesSize) {
-		StringBuilder sql = new StringBuilder(baseCountQuery());
+		StringBuilder sql = new StringBuilder(BASE_COUNT_QUERY);
 		appendAgeMatchClauses(sql, agesSize);
 		return sql.toString();
 	}
 
-	private String baseCountQuery() {
-		return """
-			SELECT COUNT(*)
-			FROM search_records sr
-			WHERE sr.hotel_id = :hotelId
-			  AND sr.check_in = :checkIn
-			  AND sr.check_out = :checkOut
-			  AND (
-			    SELECT COUNT(*)
-			    FROM search_record_ages sra_count
-			    WHERE sra_count.search_id = sr.search_id
-			  ) = :agesSize
-			""";
-	}
-
 	private void appendAgeMatchClauses(StringBuilder sql, int agesSize) {
 		for (int index = 0; index < agesSize; index++) {
-			sql.append("""
-				
-				  AND EXISTS (
-				    SELECT 1
-				    FROM search_record_ages sra_match
-				    WHERE sra_match.search_id = sr.search_id
-				      AND sra_match.age_order = :ageOrder""").append(index).append("""
-				
-				      AND sra_match.age = :ageValue""").append(index).append("""
-				
-				  )
-				""");
+			sql.append("\n")
+				.append("  AND EXISTS (\n")
+				.append("    SELECT 1\n")
+				.append("    FROM search_record_ages sra_match\n")
+				.append("    WHERE sra_match.search_id = sr.search_id\n")
+				.append("      AND sra_match.age_order = :ageOrder").append(index).append("\n")
+				.append("      AND sra_match.age = :ageValue").append(index).append("\n")
+				.append("  )\n");
 		}
 	}
 

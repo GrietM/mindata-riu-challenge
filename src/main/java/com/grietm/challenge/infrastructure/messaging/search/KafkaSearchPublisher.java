@@ -39,7 +39,6 @@ public class KafkaSearchPublisher implements SearchPublisher {
 			search.criteria().checkIn(),
 			search.criteria().checkOut(),
 			search.criteria().ages()
-
 		);
 
 		try {
@@ -61,8 +60,10 @@ public class KafkaSearchPublisher implements SearchPublisher {
 				);
 			});
 		} catch (RuntimeException exception) {
-			log.error("Failed to start Kafka publish for search id {} to topic {}", searchId, topic, exception);
-			throw exception;
+			throw new IllegalStateException(
+				"Failed to start Kafka publish for search id %s to topic %s".formatted(searchId, topic),
+				exception
+			);
 		}
 	}
 

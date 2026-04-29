@@ -1,6 +1,7 @@
 package com.grietm.challenge.infrastructure.web.error;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.grietm.challenge.domain.exception.DomainValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class RestExceptionHandler {
 
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
+	private static final String REQUEST_VALIDATION_FAILED = "Request validation failed";
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,7 +34,7 @@ public class RestExceptionHandler {
 				: error.getDefaultMessage())
 			.toList();
 
-		return new ApiErrorResponse("Request validation failed", errors);
+		return new ApiErrorResponse(REQUEST_VALIDATION_FAILED, errors);
 	}
 
 	@ExceptionHandler(BindException.class)
@@ -46,14 +48,14 @@ public class RestExceptionHandler {
 				: error.getDefaultMessage())
 			.toList();
 
-		return new ApiErrorResponse("Request validation failed", errors);
+		return new ApiErrorResponse(REQUEST_VALIDATION_FAILED, errors);
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiErrorResponse handleMissingServletRequestParameter(MissingServletRequestParameterException exception) {
 		return new ApiErrorResponse(
-			"Request validation failed",
+			REQUEST_VALIDATION_FAILED,
 			List.of(exception.getParameterName() + ": " + exception.getParameterName() + " is required")
 		);
 	}
@@ -64,7 +66,7 @@ public class RestExceptionHandler {
 		Optional<String> invalidDateField = findInvalidDateField(exception);
 		if (invalidDateField.isPresent()) {
 			return new ApiErrorResponse(
-				"Request validation failed",
+				REQUEST_VALIDATION_FAILED,
 				List.of(invalidDateField.get() + ": invalid date format. Expected format: " + DATE_FORMAT)
 			);
 		}
@@ -79,7 +81,7 @@ public class RestExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiErrorResponse handleDomainValidation(DomainValidationException exception) {
 		return new ApiErrorResponse(
-			"Request validation failed",
+			REQUEST_VALIDATION_FAILED,
 			List.of(exception.getMessage())
 		);
 	}
@@ -91,7 +93,7 @@ public class RestExceptionHandler {
 				&& invalidFormatException.getTargetType() != null
 				&& LocalDate.class.isAssignableFrom(invalidFormatException.getTargetType())) {
 				return invalidFormatException.getPath().stream()
-					.map(reference -> reference.getFieldName())
+					.map(JsonMappingException.Reference::getFieldName)
 					.filter(fieldName -> fieldName != null && !fieldName.isBlank())
 					.findFirst();
 			}

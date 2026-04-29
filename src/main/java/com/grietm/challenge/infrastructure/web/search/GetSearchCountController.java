@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
@@ -41,15 +40,13 @@ public class GetSearchCountController {
 			are exactly equal to it, including the same ages in the same order.
 			"""
 	)
-	@ApiResponses({
-		@ApiResponse(
-			responseCode = "200",
-			description = "Persisted search found and counted successfully",
-			content = @Content(schema = @Schema(implementation = GetSearchCountResponse.class))
-		),
-		@ApiResponse(responseCode = "400", description = "Request validation failed", content = @Content),
-		@ApiResponse(responseCode = "404", description = "No persisted search found for the given searchId", content = @Content)
-	})
+	@ApiResponse(
+		responseCode = "200",
+		description = "Persisted search found and counted successfully",
+		content = @Content(schema = @Schema(implementation = GetSearchCountResponse.class))
+	)
+	@ApiResponse(responseCode = "400", description = "Request validation failed", content = @Content)
+	@ApiResponse(responseCode = "404", description = "No persisted search found for the given searchId", content = @Content)
 	@GetMapping
 	public ResponseEntity<GetSearchCountResponse> count(
 		@Parameter(

@@ -17,12 +17,11 @@ public record SearchMessage(
 ) {
 
 	public SearchMessage {
-		searchId = Objects.requireNonNull(searchId, "searchId must not be null");
-		hotelId = Objects.requireNonNull(hotelId, "hotelId must not be null");
-		checkIn = Objects.requireNonNull(checkIn, "checkIn must not be null");
-		checkOut = Objects.requireNonNull(checkOut, "checkOut must not be null");
-		ages = Objects.requireNonNull(ages, "ages must not be null");
-		ages = List.copyOf(ages);
+		Objects.requireNonNull(searchId, "searchId must not be null");
+		Objects.requireNonNull(hotelId, "hotelId must not be null");
+		Objects.requireNonNull(checkIn, "checkIn must not be null");
+		Objects.requireNonNull(checkOut, "checkOut must not be null");
+		ages = List.copyOf(Objects.requireNonNull(ages, "ages must not be null"));
 	}
 
 }
