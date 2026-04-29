@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,14 +34,12 @@ public class CreateSearchController {
 			and publishes the accepted search asynchronously to Kafka.
 			"""
 	)
-	@ApiResponses({
-		@ApiResponse(
-			responseCode = "201",
-			description = "Search accepted and identified successfully",
-			content = @Content(schema = @Schema(implementation = CreateSearchResponse.class))
-		),
-		@ApiResponse(responseCode = "400", description = "Request validation failed", content = @Content)
-	})
+	@ApiResponse(
+		responseCode = "201",
+		description = "Search accepted and identified successfully",
+		content = @Content(schema = @Schema(implementation = CreateSearchResponse.class))
+	)
+	@ApiResponse(responseCode = "400", description = "Request validation failed", content = @Content)
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CreateSearchResponse create(@Valid @RequestBody CreateSearchRequest request) {

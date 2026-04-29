@@ -200,10 +200,10 @@ target/site/jacoco/index.html
 
 Según la última ejecución disponible del reporte JaCoCo:
 
-- Line coverage: `86%`
-- Branch coverage: `63%`
+- Line coverage: `92%`
+- Branch coverage: `87%`
 
-La cobertura de líneas supera el objetivo mínimo del challenge, mientras que la cobertura de branches sigue siendo uno de los puntos a mejorar.
+La cobertura actual supera el objetivo mínimo del challenge tanto en líneas como en ramas.
 
 ## Cobertura de requisitos del challenge
 
@@ -221,6 +221,7 @@ La solución cubre los principales requisitos solicitados en el challenge:
 - documentación OpenAPI / Swagger
 - entorno completamente dockerizado con `docker compose`
 - query parametrizada para evitar concatenación manual de SQL
+- cobertura JaCoCo superior al 80% en líneas y ramas
 
 Notas:
 
@@ -229,6 +230,5 @@ Notas:
 
 ## Mejoras posibles
 
-- Elevar branch coverage hasta el umbral objetivo del challenge
 - Incorporar reintentos o una estrategia de recuperación para errores de consumo en Kafka
 - Evaluar el uso de virtual threads si el volumen de concurrencia crece y se vuelve necesario optimizar el manejo de tareas bloqueantes
